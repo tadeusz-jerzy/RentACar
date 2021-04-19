@@ -10,37 +10,31 @@ namespace RentACar.API
     {
         public void OnException(ExceptionContext context)
         {
+            // custom handling for domain exceptions
             if (context.Exception is BusinessException)
             {
+                
                 var type = context.Exception.GetType().Name;
                 var exception = (BusinessException)context.Exception;
-                var validation = new
+                var details = new
                 {
                     Status = 400,
                     Title = "Bad Request",
                     Message = exception.Message,
-                    BusinessException = type
+                    BusinessException = type,
+                    Trace = context.HttpContext.TraceIdentifier
                 };
 
                 var json = new
                 {
-                    errors = new[] { validation }
+                    errors = new[] { details }
                 };
 
                 context.Result = new BadRequestObjectResult(json);
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 context.ExceptionHandled = true;
-            } /*else
-            {
-                var json = new
-                {
-                    error =  context.Exception.Message 
-                };
-                context.Result = new BadRequestObjectResult(json);
-                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.ExceptionHandled = true;
-            }
-            */
+            } 
+            
 
 
         }

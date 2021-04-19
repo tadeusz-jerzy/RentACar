@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RentACar.Core\RentACar.Core.csproj" />
     <ProjectReference Include="..\RentACar.Infrastructure\RentACar.Infrastructure.csproj" />
     <ProjectReference Include="..\RentACar.Tests.Shared\RentACar.Tests.Shared.csproj" />
   </ItemGroup>

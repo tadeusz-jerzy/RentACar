@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -40,12 +41,6 @@ namespace RentACar
 
             services.AddMyServices(Configuration);
 
-            /*optionsBuilder.UseInMemoryDatabase("new12").LogTo(
-                Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name//,
-                                                 //DbLoggerCategory.Database.Transaction.Name
-                                               },
-                LogLevel.Information)
-                .EnableSensitiveDataLogging(); */
             services.AddMyDbContexts(Configuration);
             
             services.AddDbContext<MyAppContext>(o => o.UseInMemoryDatabase("RentACar_Main3"));
@@ -53,6 +48,8 @@ namespace RentACar
             services.AddTransient<ISeed, Seed>();
 
             services.AddSwaggerGen();
+
+            services.AddResponseCaching();
 
         }
 
@@ -64,12 +61,8 @@ namespace RentACar
                 app.UseDeveloperExceptionPage();
             }
 
-            try
-            {
-                seed.Create();
-            }
-            catch (Exception e) { }
-
+            seed.Create();
+            
             app.UseHttpsRedirection();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -84,7 +77,32 @@ namespace RentACar
 
             app.UseRouting();
 
+            
+            app.UseResponseCaching();
+            
+            
+            // the following setting is visible to the unit test
+            // but is subsequently overridden via controller method attribute
+            // and external client gets a different header
+            app.Use(async (context, next) =>
+            {
+                if ("GET" == context.Request.Method)
+                {
+                    context.Response.GetTypedHeaders().CacheControl =
+                    new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                    {
+                        Public = true,
+                        MaxAge = TimeSpan.FromSeconds(33)
+                    };
+                    context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+                        new string[] { "Accept-Encoding" };
+                }
+
+                await next();
+            });
+
             app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

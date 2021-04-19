@@ -17,6 +17,7 @@ namespace RentACar.API.Controllers
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class CarsController : ControllerBase
     {
 
@@ -35,6 +36,11 @@ namespace RentACar.API.Controllers
         [HttpGet(Name =nameof(GetCars))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(List<CarForListingDTO>))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        
+        // this cache setting is seen by external client
+        // but not via MS-recommended testing with WebApplicationFactory
+        [ResponseCache(VaryByQueryKeys = new[] { "*" }, Duration = 99, Location = ResponseCacheLocation.Any, NoStore = false)]
+
         public async Task<ActionResult<List<CarForListingDTO>>> GetCars([FromQuery]CarQueryFilter filters)
         {
             List<CarForListingDTO> cars = await _carService.GetCarsAsync(filters);
@@ -49,6 +55,7 @@ namespace RentACar.API.Controllers
         // GET api/cars/5
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ResponseCache(Duration = 99, Location = ResponseCacheLocation.Any, NoStore = false)]
         [HttpGet("{id}", Name = nameof(GetOneCar))]
         public async Task<ActionResult<CarForListingDTO>> GetOneCar(int id)
         {

@@ -1,14 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Moq;
 using RentACar.API.Controllers;
 using RentACar.Core.DTOs;
 using RentACar.Core.Interfaces;
 using RentACar.Core.QueryFilters;
-using RentACar.Tests.Shared;
+using RentACar.API;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using System.Net.Http;
+using System;
 
 namespace RentACar.UnitTests
 {
@@ -17,9 +20,14 @@ namespace RentACar.UnitTests
     // ( https://andrewlock.net/should-you-unit-test-controllers-in-aspnetcore/ )
     // and we could then test i.e. DTO validation logic
 
-    public class CarsControllerTests : TestWithOutput
+    public class CarsControllerTests
     {
-        public CarsControllerTests(ITestOutputHelper output) : base(output ) { }
+        private ITestOutputHelper _output;
+        public CarsControllerTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
 
         [Fact]
         public async Task GetCars_ReturnsNotFound_IfNoCarsFromService()
@@ -29,7 +37,7 @@ namespace RentACar.UnitTests
             mockService.Setup(svc => svc.GetCarsAsync(It.IsAny<CarQueryFilter>()))
                 .ReturnsAsync(new List<CarForListingDTO>());
 
-            TestOutput.WriteLine("hello");
+            _output.WriteLine("hello");
             var controller = new CarsController(mockService.Object);
 
             // Act
@@ -50,7 +58,7 @@ namespace RentACar.UnitTests
             var listOfCarDTOs = new List<CarForListingDTO>();
             for (int i = 1; i <= numCars; i++)
                 listOfCarDTOs.Add(new CarForListingDTO());
-            
+
             mockService.Setup(svc => svc.GetCarsAsync(It.IsAny<CarQueryFilter>()))
                 .ReturnsAsync(listOfCarDTOs);
 
@@ -58,12 +66,13 @@ namespace RentACar.UnitTests
 
             // Act
             var result = await controller.GetCars(null);
-            
+
             // Verify types and value
-            var ok = (OkObjectResult)result.Result; 
+            var ok = (OkObjectResult)result.Result;
             var list = (List<CarForListingDTO>)ok.Value;
             Assert.Equal(numCars, list.Count);
 
         }
     }
+       
 }

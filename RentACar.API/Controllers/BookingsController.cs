@@ -12,6 +12,7 @@ namespace RentACar.API.Controllers
     [Route("api/[controller]")]
     [Produces("application/json")]
     [ApiController]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class BookingsController : ControllerBase
     {
         private readonly IBookingService _bookingService;
@@ -25,6 +26,7 @@ namespace RentACar.API.Controllers
         // GET api/bookings/5
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ResponseCache(Duration = 20, Location = ResponseCacheLocation.Any, NoStore = false)]
         [HttpGet("{id}", Name = nameof(GetOneBooking))]
         public async Task<IActionResult> GetOneBooking(int id)
         {
