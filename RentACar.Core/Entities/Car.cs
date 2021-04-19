@@ -39,7 +39,7 @@ namespace RentACar.Core.Entities
         public bool IsActive => (RentalCarStatus.Active == Status);
 
         
-        internal static Car FromDto (CarCreateDTO dto)
+        public static Car FromDto (CarCreateDTO dto)
         {
             // checks domain-level rules internally
             var spec = CarSpecification.FromMakeModelAndAcriss(

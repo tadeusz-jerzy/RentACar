@@ -15,7 +15,21 @@ namespace RentACar.IntegrationTests
 {
     public class BookingServiceTest : InMemoryDbTest
     {
-        public BookingServiceTest(ITestOutputHelper output) : base(output) {
+        async Task CreateOneCarUsingCarservice()
+        {
+            var cs = new CarService(db);
+            await cs.CreateCarFromDto(new CarCreateDTO
+            {
+                Make = "POLSKI FIAT",
+                Model = "126P",
+                AcrissCode = "ABCD",
+                RegistrationNumber = "00000",
+                Vin = "00000000000000000",
+                DailyPricePLN = 50
+            });
+        }
+        public BookingServiceTest(ITestOutputHelper output) : base(output)
+        {
             var userService = new UserService();
             bookingService = new BookingService(db, userService);
         }
@@ -23,7 +37,7 @@ namespace RentACar.IntegrationTests
         private BookingService bookingService;
 
         private BookingDTO GetValidBookingDTO()
-            =>new BookingDTO
+            => new BookingDTO
             {
                 CarId = 1,
                 Start = DateTime.Today.AddDays(1),
@@ -47,7 +61,7 @@ namespace RentACar.IntegrationTests
             Assert.Equal(dto.CarId, result.CarId);
             Assert.Equal(dto.Start, result.Start);
             Assert.Equal(dto.End, result.End);
-            
+
             // m acros.properties(RentACar.Core.DTOs.BookingDTO)
             //Assert.Equal(dto.${name}, result.${name});
 
@@ -89,7 +103,7 @@ namespace RentACar.IntegrationTests
             var result = await bookingService.CreateBookingAsync(dto);
 
             // assert
-            Assert.True(0 < result.Id); 
+            Assert.True(0 < result.Id);
         }
 
         [Fact]
@@ -103,7 +117,7 @@ namespace RentACar.IntegrationTests
             var dto2 = GetValidBookingDTO();
 
             // new booking starts before another ends
-            dto2.Start = dto1.End.AddHours(-1); 
+            dto2.Start = dto1.End.AddHours(-1);
             dto2.End = dto2.Start.AddDays(10);
 
             // "act"
@@ -135,7 +149,7 @@ namespace RentACar.IntegrationTests
             act.Should().ThrowExactly<ConflictingEntityException>();
 
         }
-        
+
 
         [Fact]
         async Task Test_ShouldRejectBookingThatStartsTooEarlyAfterAnother()

@@ -27,10 +27,18 @@ namespace RentACar.IntegrationTests
             var builder = new DbContextOptionsBuilder<MyAppContext>();
             builder.UseInMemoryDatabase("Testing");
             context = new MyAppContext(builder.Options);
-            context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             db = new UnitOfWork(context);
         }
+
+        protected MyAppContext GetNewContext()
+        {
+            var builder = new DbContextOptionsBuilder<MyAppContext>();
+            builder.UseInMemoryDatabase("Testing");
+            context = new MyAppContext(builder.Options);
+            return context;
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             context.Database.EnsureDeleted();
@@ -41,20 +49,6 @@ namespace RentACar.IntegrationTests
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        protected async Task CreateOneCarUsingCarservice()
-        {
-            var cs = new CarService(db);
-            await cs.CreateCarFromDto(new CarCreateDTO{
-                    Make = "POLSKI FIAT",
-                    Model = "126P",
-                    AcrissCode = "ABCD",
-                    RegistrationNumber = "00000",
-                    Vin = "00000000000000000",
-                    DailyPricePLN = 50
-            });
-        }
-        
 
     }
 }
