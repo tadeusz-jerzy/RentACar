@@ -13,8 +13,9 @@ using Xunit.Abstractions;
 namespace RentACar.UnitTests
 {
 
-    // controller testing may make more sense together with the framework 
+    // controller testing may make most sense together with the framework 
     // ( https://andrewlock.net/should-you-unit-test-controllers-in-aspnetcore/ )
+    // and we could then test i.e. DTO validation logic
 
     public class CarsControllerTests : TestWithOutput
     {

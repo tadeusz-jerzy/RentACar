@@ -12,7 +12,6 @@ namespace RentACar.Infrastructure
         public static IServiceCollection AddMyDbContexts(this IServiceCollection services,
             IConfiguration configuration)
         {
-            Console.WriteLine("AddContexts");
             services.AddDbContext<MyAppContext>(o => o.UseInMemoryDatabase("RentACar_Main2"));
             return services;
         }
@@ -24,6 +23,7 @@ namespace RentACar.Infrastructure
             services.AddTransient<IBookingService, BookingService>();
             services.AddScoped (typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserService, UserService>();
             return services;
             
         }
