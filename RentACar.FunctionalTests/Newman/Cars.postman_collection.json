@@ -1,0 +1,250 @@
+{
+	"info": {
+		"_postman_id": "eb62a4ee-dad5-41b1-ae47-0c3efa35ba4d",
+		"name": "Cars",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "add car",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Returned make and model should match the one sent in create dto\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    console.log(jsonData);\r",
+							"    pm.expect(jsonData.make.toUpperCase()).to.eql(\"POLSKI FIAT\");\r",
+							"});\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Cache-Control header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Cache-Control\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Cache-Control header contains no-cache\", () => {\r",
+							"    console.log(pm.response.headers);\r",
+							"    var c = pm.response.headers.filter(h => h.key ==\"Cache-Control\");\r",
+							"    var v = c[0]['value'];\r",
+							"    pm.expect(v).to.eql(\"no-store,no-cache\");\r",
+							"    \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RegistrationNumber\" : \"abc123\",\r\n    \"VIN\" : \"12345678901234567\",\r\n    \"Make\" : \"polski fiat\",\r\n    \"Model\": \"125p\",\r\n    \"DailyPricePLN\" : 15,\r\n    \"AcrissCode\" : \"ABCD\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/cars",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete car 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Cache-Control header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Cache-Control\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Cache-Control header contains no-cache\", () => {\r",
+							"    console.log(pm.response.headers);\r",
+							"    var c = pm.response.headers.filter(h => h.key ==\"Cache-Control\");\r",
+							"    var v = c[0]['value'];\r",
+							"    pm.expect(v).to.eql(\"no-store,no-cache\");\r",
+							"    \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/cars/2",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"cars",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "show car 2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/cars/2",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"cars",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "show cars",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful GET request\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Cache-Control header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Cache-Control\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Cache-Control header contains max-age > 0\", () => {\r",
+							"    console.log(pm.response.headers);\r",
+							"    var c = pm.response.headers.filter(h => h.key ==\"Cache-Control\");\r",
+							"    var v = c[0]['value'];\r",
+							"    var re = /max-age=(\\d+)/i;\r",
+							"    var m = v.match(re);\r",
+							"    var seconds  = parseInt(m[1]);\r",
+							"    pm.expect(seconds).to.be.greaterThan(5);\r",
+							"    \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/cars",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "available polonez",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful GET request\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Cache-Control header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Cache-Control\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Cache-Control header contains max-age > 0\", () => {\r",
+							"    console.log(pm.response.headers);\r",
+							"    var c = pm.response.headers.filter(h => h.key ==\"Cache-Control\");\r",
+							"    var v = c[0]['value'];\r",
+							"    var re = /max-age=(\\d+)/i;\r",
+							"    var m = v.match(re);\r",
+							"    var seconds  = parseInt(m[1]);\r",
+							"    pm.expect(seconds).to.be.greaterThan(5);\r",
+							"    \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/cars?model=126P",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"cars"
+					],
+					"query": [
+						{
+							"key": "model",
+							"value": "126P"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

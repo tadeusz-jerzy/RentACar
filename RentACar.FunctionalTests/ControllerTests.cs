@@ -29,9 +29,10 @@ namespace RentACar.FunctionalTests
         // and external client gets a different header
         // so apparently if we use the attributes, we must test from further outside the app
         // than the WebApplicationFactory.CreateClient()
+        // (for example Postman GUI + Newman CLI )
         public async Task Get_AllowsCaching(string endpoint)
         {
-            var response = await Client.GetAsync("/cars");
+            var response = await Client.GetAsync(endpoint);
             var headers = response.Headers;
 
             Assert.NotEmpty(response.Headers);
