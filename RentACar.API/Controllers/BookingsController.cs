@@ -21,8 +21,11 @@ namespace RentACar.API.Controllers
             _bookingService = bookingService;
         }
 
+
         // GET api/bookings/5
-        [HttpGet("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [HttpGet("{id}", Name = nameof(GetOneBooking))]
         public async Task<IActionResult> GetOneBooking(int id)
         {
             var dto = await _bookingService.GetActiveBookingAsync(id);
@@ -33,7 +36,10 @@ namespace RentACar.API.Controllers
             return Ok(dto);
         }
 
+
         // POST api/bookings
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] BookingDTO createDTO)
         {
@@ -41,10 +47,18 @@ namespace RentACar.API.Controllers
             return Created($"/api/bookings/{newDto.Id}", newDto);
         }
 
+
         // DELETE api/bookings/5
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Cancel(int id)
         {
+            var booking  = await _bookingService.GetActiveBookingAsync(id);
+
+            if (booking == null)
+                return NotFound();
+
             await _bookingService.CancelBookingAsync(id);
             return Ok(true);
         }

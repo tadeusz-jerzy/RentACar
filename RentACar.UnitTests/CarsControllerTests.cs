@@ -22,7 +22,7 @@ namespace RentACar.UnitTests
         public CarsControllerTests(ITestOutputHelper output) : base(output ) { }
 
         [Fact]
-        public async Task GetCars_ReturnsNoContent_IfNoCarsFromService()
+        public async Task GetCars_ReturnsNotFound_IfNoCarsFromService()
         {
             // Arrange
             var mockService = new Mock<ICarService>();
@@ -36,7 +36,7 @@ namespace RentACar.UnitTests
             var result = await controller.GetCars(null);
 
             // Assert
-            Assert.IsType<NoContentResult>(result.Result);
+            Assert.IsType<NotFoundResult>(result.Result);
         }
 
         [Theory]

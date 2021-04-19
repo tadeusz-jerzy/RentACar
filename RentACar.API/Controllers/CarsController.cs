@@ -21,7 +21,7 @@ namespace RentACar.API.Controllers
     {
 
         // TODO add related links, perhaps an ApiResponse wrapper with links
-        // controller 
+
 
         private readonly ICarService _carService;
         
@@ -30,21 +30,25 @@ namespace RentACar.API.Controllers
             _carService = carService;
         }
 
+
         // GET: api/cars
         [HttpGet(Name =nameof(GetCars))]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(List<CarForListingDTO>))]
-        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<List<CarForListingDTO>>> GetCars([FromQuery]CarQueryFilter filters)
         {
             List<CarForListingDTO> cars = await _carService.GetCarsAsync(filters);
             
             if (cars == null || cars.Count == 0)
-                return NoContent();
+                return NotFound();
             
             return Ok(cars);
         }
 
+
         // GET api/cars/5
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpGet("{id}", Name = nameof(GetOneCar))]
         public async Task<ActionResult<CarForListingDTO>> GetOneCar(int id)
         {
@@ -56,19 +60,31 @@ namespace RentACar.API.Controllers
             return Ok(car);
         }
 
+
         // POST api/<CarsController>
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [HttpPost]
         public async Task<ActionResult<CarForListingDTO>> Post([FromBody] CarCreateDTO createDTO)
         {
             CarForListingDTO newDto = await _carService.CreateCarFromDto(createDTO);
-            return CreatedAtRoute(nameof(GetOneCar), newDto);
+            return CreatedAtRoute(nameof(GetOneCar), new { id = newDto.Id }, newDto);
         }
 
+
         // DELETE api/<CarsController>/5
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
+            var car = await _carService.GetCarAsync(id);
+
+            if (car == null)
+                return NotFound(); 
+            
             await _carService.DeleteCarAsync(id);
+
             return Ok(true);
         }
 
