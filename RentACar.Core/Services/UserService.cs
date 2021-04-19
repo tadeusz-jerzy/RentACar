@@ -3,16 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace RentACar.Core.Entities
+namespace RentACar.Core.Services
 {
     
     public class UserService :IUserService // within "User" aggregate root
     {
         public UserService() { }
 
-        public bool UserExists(string idToCheck)
+        public bool UserExists(string id)
         {
-            return (idToCheck.Length > 1 && idToCheck.Length < 50);
+            return (id.Length > 1 && id.Length < 50);
         }
     }
 }

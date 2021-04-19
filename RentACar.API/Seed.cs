@@ -49,7 +49,7 @@ namespace RentACar.API
                 new BookingDTO()
                 {
                     CarId = 1, UserId = "ALICJA NOWAK",
-                    Start = new DateTime(2021,5,5), End = new DateTime(2021,5,8)
+                    Start = new DateTime(2021,5,6), End = new DateTime(2021,5,8)
                 }
             };
             bookings.ForEach(async b => await _bookingService.CreateBookingAsync(b));
