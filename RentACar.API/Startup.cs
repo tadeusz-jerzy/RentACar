@@ -20,7 +20,7 @@ namespace RentACar
 {
     public class Startup
     {
-        
+        public const int CACHE_MAX_AGE_SECONDS = 33;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -92,7 +92,7 @@ namespace RentACar
                     new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
                     {
                         Public = true,
-                        MaxAge = TimeSpan.FromSeconds(33)
+                        MaxAge = TimeSpan.FromSeconds(CACHE_MAX_AGE_SECONDS)
                     };
                     context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
                         new string[] { "Accept-Encoding" };

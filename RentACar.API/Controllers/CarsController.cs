@@ -10,7 +10,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace RentACar.API.Controllers
 {
@@ -20,7 +19,7 @@ namespace RentACar.API.Controllers
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class CarsController : ControllerBase
     {
-
+        public const int CACHE_MAX_AGE_SECONDS = 3 * Startup.CACHE_MAX_AGE_SECONDS; // 3 x
         // TODO add related links, perhaps an ApiResponse wrapper with links
 
 
@@ -39,7 +38,7 @@ namespace RentACar.API.Controllers
         
         // this cache setting is seen by external client
         // but not via MS-recommended testing with WebApplicationFactory
-        [ResponseCache(VaryByQueryKeys = new[] { "*" }, Duration = 99, Location = ResponseCacheLocation.Any, NoStore = false)]
+        [ResponseCache(VaryByQueryKeys = new[] { "*" }, Duration = CACHE_MAX_AGE_SECONDS, Location = ResponseCacheLocation.Any, NoStore = false)]
 
         public async Task<ActionResult<List<CarForListingDTO>>> GetCars([FromQuery]CarQueryFilter filters)
         {
@@ -55,7 +54,7 @@ namespace RentACar.API.Controllers
         // GET api/cars/5
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ResponseCache(Duration = 99, Location = ResponseCacheLocation.Any, NoStore = false)]
+        [ResponseCache(Duration = CACHE_MAX_AGE_SECONDS, Location = ResponseCacheLocation.Any, NoStore = false)]
         [HttpGet("{id}", Name = nameof(GetOneCar))]
         public async Task<ActionResult<CarForListingDTO>> GetOneCar(int id)
         {

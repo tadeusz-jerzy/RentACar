@@ -70,6 +70,61 @@
 			"response": []
 		},
 		{
+			"name": "add car invalid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Invalid POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response should include errors element\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var c = jsonData[\"errors\"];\r",
+							"    console.log(c);\r",
+							"    pm.expect(c.to.eql(true));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RegistrationNumber\" : \"abc\",\r\n    \"VIN\" : \"12345678901234567xx\",\r\n    \"Make\" : \"polski fiat\",\r\n    \"Model\": \"125p\",\r\n    \"DailyPricePLN\" : 9999999,\r\n    \"AcrissCode\" : \"ABCDe\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/cars",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "delete car 2",
 			"event": [
 				{
