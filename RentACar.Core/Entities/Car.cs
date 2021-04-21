@@ -20,7 +20,8 @@ namespace RentACar.Core.Entities
         
         // Registration Number could be a ValueObject with own validation too
         [Required]
-        [MinLength(8)]
+        [MinLength(6)]
+        [MaxLength(16)]
         public string RegistrationNumber { get; set; }
 
         [Required]

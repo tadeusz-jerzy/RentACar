@@ -6,6 +6,8 @@ namespace RentACar.Core.Entities
 {
     public class Vin : ValueObject
     {
+        [MinLength(17)]
+        [MaxLength(17)]
         public string Code { get; private set; }
 
         public Vin() { }

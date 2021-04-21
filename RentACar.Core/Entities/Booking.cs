@@ -13,6 +13,9 @@ namespace RentACar.Core.Entities
         public const int HOURS_INTERVAL_BETWEEN_BOOKINGS = 24;
 
         private Booking() { }
+        
+        [MinLength(2)]
+        [MaxLength(100)]
         public string UserId { get; set; }
         public int CarId { get; set; }
         public Car RentalCar { get; set; }
