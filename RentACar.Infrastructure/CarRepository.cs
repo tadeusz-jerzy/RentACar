@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace RentACar.Infrastructure
 {
+    // inheriting from BaseRepository allows to write more complex queries in the data/infrastructure project
+    // as need arises (below examples are admittedly simple)
     public class CarRepository : BaseRepository<Car>, ICarRepository
     {
         public CarRepository(DbContext context) : base(context) { }

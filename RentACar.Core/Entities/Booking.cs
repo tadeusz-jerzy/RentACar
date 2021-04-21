@@ -3,6 +3,7 @@ using RentACar.Core.Enumerations;
 using RentACar.Core.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace RentACar.Core.Entities
@@ -13,6 +14,9 @@ namespace RentACar.Core.Entities
         public const int HOURS_INTERVAL_BETWEEN_BOOKINGS = 24;
 
         private Booking() { }
+        
+        [MinLength(2)]
+        [MaxLength(100)]
         public string UserId { get; set; }
         public int CarId { get; set; }
         public Car RentalCar { get; set; }
