@@ -10,6 +10,8 @@ namespace RentACar.Infrastructure
         {
             builder.HasOne(m => m.CarMake)
                 .WithMany(m => m.CarModels);
+
+            builder.HasIndex(m => m.CarMakeId);
            
         }
     }

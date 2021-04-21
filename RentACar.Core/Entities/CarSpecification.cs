@@ -33,40 +33,33 @@ namespace RentACar.Core.Entities
     public class CarSpecification : ValueObject
     {
         [Required]
-        public CarMake Make { get; private set; }
-        public int CarMakeId { get; private set; }
-
-        [Required]
-        public CarModel Model { get; private set; }
+        public CarModel Model { get; private set; } 
         public int CarModelId { get; private set; }
-        public string AcrissCode { get; private set; } 
+        public string AcrissCode { get; private set; }
+
+        public CarMake Make => Model.CarMake;
 
         #region creation methods
-        private CarSpecification(string make, string model, string acrissCode)
+        private CarSpecification(CarModel model, string acrissCode)
         {
-            Make = make;
             Model = model;
+            
             AcrissCode = acrissCode ?? string.Empty;
         }
 
-        public static CarSpecification FromMakeAndModel(string makeName, string modelName)
+        public static CarSpecification FromModel(CarModel model)
         {
-            if (makeName == null || modelName == null)
+            // car model now contains a valid reference to car make
+            if (model == null)
                 throw new InvalidDomainValueException("invalid car make/model combination");
             
-            var make = makeName.ToUpper();
-            var model = modelName.ToUpper();
-            
-            if (!IsValidMakeAndModel(make, model))
-                throw new InvalidDomainValueException("invalid car make/model combination");
-
-            return new CarSpecification(make, model, acrissCode: string.Empty);
+            return new CarSpecification(model, acrissCode: string.Empty);
             
         }
 
-        public static CarSpecification FromMakeModelAndAcriss(string makeName, string modelName, string acrissCode)
+        public static CarSpecification FromModelAndAcriss(CarModel model, string acrissCode)
         {
-            var makeModelSpec = FromMakeAndModel(makeName, modelName);
+            var makeModelSpec = FromModel(model);
 
             var acode = (acrissCode ?? string.Empty).ToUpper();
 
@@ -74,25 +67,14 @@ namespace RentACar.Core.Entities
                 throw new InvalidDomainValueException("invalid acriss code");
 
             // immutability / private set is only for the serializer
-            return new CarSpecification(makeModelSpec.Make, makeModelSpec.Model, acode);
+            return new CarSpecification(makeModelSpec.Model, acode);
 
         }
 
         #endregion
 
         #region static validation used by factory methods
-        private static Dictionary<string, List<string>> _makesAndModels = new Dictionary<string, List<string>>()
-            {
-                { "FSO", new List<string>() { "POLONEZ"  , "WARSZAWA" }
-                },
-                { "POLSKI FIAT", new List<string>() { "125P", "126P" } },
-                { "FIAT", new List<string>() { "PUNTO", "PANDA", "DUCATO" } }
-            };
-
-        private static bool IsValidMakeAndModel(string make, string model) =>
-            _makesAndModels.ContainsKey(make)
-                 && _makesAndModels[make].Contains(model);
-
+  
         private static bool IsValidAcrissCode(string code) =>
             (code.Length == 4);
 

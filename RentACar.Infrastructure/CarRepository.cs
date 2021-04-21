@@ -11,21 +11,23 @@ using System.Threading.Tasks;
 namespace RentACar.Infrastructure
 {
     // inheriting from BaseRepository allows to write more complex queries in the data/infrastructure project
-    // as need arises (below examples are admittedly simple)
+    // as need arises (below examples are admittedly simple - small optimization to avoid returning whole entity from db)
     public class CarRepository : BaseRepository<Car>, ICarRepository
     {
         public CarRepository(DbContext context) : base(context) { }
 
-        public async Task<Car> GetByVinAsync(string vinCode)
-            => await _entities
+        public async Task<bool> CarWithVinExists(string vinCode)
+            => (null != await _entities
                 .Where(c => c.Vin.Code == vinCode)
-                .FirstOrDefaultAsync();
-        public async Task<Car> GetByRegistrationAsync(string registration)
-            => await _entities
-                .Where(c => c.RegistrationNumber == registration)
-                .FirstOrDefaultAsync();
+                .Include(c => c.Id)
+                .FirstOrDefaultAsync());
+        public async Task<bool> CarWithRegistrationExists(string reg)
+            => (null != await _entities
+                .Where(c => c.RegistrationNumber == reg)
+                .Include(c => c.Id)
+                .FirstOrDefaultAsync());
 
-        
+
 
     }
 }

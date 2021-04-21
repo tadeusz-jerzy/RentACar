@@ -19,14 +19,7 @@ namespace RentACar.Core.DTOs
         public string RegistrationNumber { get; set; }
 
         [Required]
-        [MinLength(2)]
-        [MaxLength(50)]
-        public string Make { get; set; }
-
-        [Required]
-        [MinLength(1)]
-        [MaxLength(100)]
-        public string Model { get; set; }
+        public int ModelId { get; set; }
 
         [Required]
         [MinLength(4)]

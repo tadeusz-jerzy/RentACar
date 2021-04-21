@@ -10,11 +10,11 @@ namespace RentACar.Core.Entities
         [MinLength(1)]
         [MaxLength(100)]
         [Required]
-        string Name { get; set; }
+        public string Name { get; set; }
 
         [MinLength(1)]
         [MaxLength(100)]
-        string LogoFilename { get; set;} // optional
+        public string LogoFilename { get; set;} // optional
 
         public List<CarModel> CarModels { get; set; }
 

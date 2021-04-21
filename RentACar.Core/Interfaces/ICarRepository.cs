@@ -18,8 +18,8 @@ namespace RentACar.Core.Interfaces
         // (while writing code in Core will not require deep EF knowledge from the devs)
         // 
         // so sometimes we could implement a more speicalized repo than the BaseRepository
-        Task<Car> GetByVinAsync(string vinCode);
-        Task<Car> GetByRegistrationAsync(string registration);
+        Task<bool> CarWithVinExists(string vinCode);
+        Task<bool> CarWithRegistrationExists(string registration);
 
         
     }

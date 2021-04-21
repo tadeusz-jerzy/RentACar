@@ -22,24 +22,44 @@ namespace RentACar.Core.Services
         {
             _db = db;
         }
+
         
         public async Task<CarForListingDTO> CreateCarFromDto(CarCreateDTO dto)
         {
-            Car sameRegistration = await _db.Cars.GetByRegistrationAsync(dto.RegistrationNumber);
+            bool sameRegistrationExists = await _db.Cars.CarWithRegistrationExists(dto.RegistrationNumber);
 
-            if (sameRegistration != null)
+            if (sameRegistrationExists)
                 throw new ConflictingEntityException(
                     "car with this registration number already exists");
 
-            Car sameVin = await _db.Cars.GetByVinAsync(dto.Vin);
-
-            if (sameVin != null)
+            bool sameVinExists = await _db.Cars.CarWithVinExists(dto.Vin);
+            if (sameVinExists)
                 throw new ConflictingEntityException(
                     "car with this VIN number already exists");
-            
 
+
+            CarModel carModel = await _db.CarModels.FindByIdAsync(dto.ModelId);
+            if (carModel == null)
+                throw new EntityNotFoundException("car model not found for given car model id");
+
+            // checks domain-level rules internally
+            var spec = CarSpecification.FromModelAndAcriss(carModel, dto.AcrissCode);
+
+            var vin = new Vin(dto.Vin);
+
+            return new Car()
+            {
+                Specification = spec,
+                Vin = vin,
+                DailyPricePLN = dto.DailyPricePLN,
+                Status = RentalCarStatus.Active
+            };
+            
+            
             // internal validation within Car class
             Car car = Car.FromDto(dto); // contains single entity-level validation
+
+
 
             // now, adding the car will not cause invalid state of the system
             _db.Cars.Add(car);
@@ -107,10 +127,10 @@ namespace RentACar.Core.Services
             //    conditions.Add(c => c.${name} == filters.${name});
 
             if (filters.Make != default)
-                conditions.Add(c => c.Specification.Make == filters.Make);
+                conditions.Add(c => c.Specification.Make.Name == filters.Make);
             
             if (filters.Model != default)
-                conditions.Add(c => c.Specification.Model == filters.Model);
+                conditions.Add(c => c.Specification.Model.Name == filters.Model);
             
             if (filters.AcrissCode != default)
                 conditions.Add(c => c.Specification.AcrissCode == filters.AcrissCode);

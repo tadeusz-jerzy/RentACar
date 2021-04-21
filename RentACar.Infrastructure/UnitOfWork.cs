@@ -11,7 +11,9 @@ namespace RentACar.Infrastructure
 
         private CarRepository _cars;
         private BaseRepository<Booking> _bookings;
-        
+        private BaseRepository<CarMake> _carMakes;
+        private BaseRepository<CarModel> _carModels;
+
         public UnitOfWork(MyAppContext context)
         {
             _context = context;
@@ -20,6 +22,12 @@ namespace RentACar.Infrastructure
        
         public IBaseRepository<Booking> Bookings =>
             _bookings ??= new BaseRepository<Booking>(_context);
+
+        public IBaseRepository<CarMake> CarMakes =>
+            _carMakes ??= new BaseRepository<CarMake>(_context);
+
+        public IBaseRepository<CarModel> CarModels =>
+            _carModels ??= new BaseRepository<CarModel>(_context);
 
         public ICarRepository Cars =>
             _cars ??= new CarRepository(_context);
