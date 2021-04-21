@@ -15,6 +15,8 @@ namespace RentACar.Core.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IBaseRepository<Booking> Bookings { get;  }
+        IBaseRepository<CarMake> CarMakes { get; }
+        IBaseRepository<CarModel> CarModels { get; }
         ICarRepository Cars { get;  }
         Task SaveChangesAsync();
     }

@@ -15,11 +15,6 @@ namespace RentACar.Infrastructure
             : base(options) {
 
         }
-        /*
-        public virtual DbSet<Car> Cars { get; set; }
-        public virtual DbSet<Booking> Bookings { get; set; }
-        public virtual DbSet<Availability> Availabilities { get; set; }
-        */
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
           

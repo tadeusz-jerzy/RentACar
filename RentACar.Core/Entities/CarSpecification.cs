@@ -12,8 +12,7 @@ namespace RentACar.Core.Entities
      * in the system. Also, if we change "VW" to "Volkswagen" in the system, it makes sense to 
      * propagate the change to all car specification objects.
      * For this reason, car make + car model make sense to be modelled as entities 
-     * (which I don't do here) 
-     * and CarSpecification would contain references to them. 
+     * and CarSpecification contains references to them. 
      * DDD allows for value objects to reference entities although it's not typical.
      * 
      *
@@ -34,9 +33,12 @@ namespace RentACar.Core.Entities
     public class CarSpecification : ValueObject
     {
         [Required]
-        public string Make { get; private set; }
+        public CarMake Make { get; private set; }
+        public int CarMakeId { get; private set; }
+
         [Required]
-        public string Model { get; private set; }
+        public CarModel Model { get; private set; }
+        public int CarModelId { get; private set; }
         public string AcrissCode { get; private set; } 
 
         #region creation methods
