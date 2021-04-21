@@ -11,17 +11,22 @@ namespace RentACar.API
         public void OnException(ExceptionContext context)
         {
             // custom handling for domain exceptions
-            if (context.Exception is BusinessException)
+            if (context.Exception is BusinessException businessException)
             {
-                
-                var type = context.Exception.GetType().Name;
-                var exception = (BusinessException)context.Exception;
+                var statusCode = businessException switch
+                {
+                    EntityNotFoundException e => 404,
+                    _ => 400
+                };
+
+                var typeName = context.Exception.GetType().Name;
+                var exception = businessException;
                 var details = new
                 {
                     Status = 400,
                     Title = "Bad Request",
                     Message = exception.Message,
-                    BusinessException = type,
+                    BusinessException = typeName,
                     Trace = context.HttpContext.TraceIdentifier
                 };
 

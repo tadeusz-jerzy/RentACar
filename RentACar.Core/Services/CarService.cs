@@ -53,7 +53,7 @@ namespace RentACar.Core.Services
             Car car = await _db.Cars.FindByIdAsync(id);
 
             if (car == null || car.Status == RentalCarStatus.Removed)
-                throw new InvalidDomainValueException("car not found");
+                throw new EntityNotFoundException("car not found");
 
             // business rule: a deleted car must not have active bookings
             List < Booking> activeBookings = await _db.Bookings.GetManyAsync(

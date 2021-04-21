@@ -38,7 +38,7 @@ namespace RentACar.Core.Services
 
             // booking must have a valid user id
             if (!_user.UserExists(dto.UserId))
-                throw new InvalidDomainValueException(
+                throw new EntityNotFoundException(
                     "user id not found");
 
             // no two bookings can overlap for one car aggregate root
