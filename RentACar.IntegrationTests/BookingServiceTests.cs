@@ -48,8 +48,11 @@ namespace RentACar.IntegrationTests
                 UserId = "JAN"
             };
 
+#pragma warning disable IDE0051 // unused private members
+
         [Fact]
         async Task Test_ShouldCreateBookingFromValidDTO()
+
         {
             // arrange
             await CreateOneCarUsingCarservice();
@@ -229,3 +232,4 @@ namespace RentACar.IntegrationTests
 
     }
 }
+#pragma warning restore IDE0051 // Remove unused private members

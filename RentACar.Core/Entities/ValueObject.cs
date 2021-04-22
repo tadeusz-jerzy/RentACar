@@ -8,7 +8,9 @@ namespace RentACar.Core.Entities
     {
         protected static bool EqualOperator(ValueObject left, ValueObject right)
         {
+#pragma warning disable IDE0041 // Use 'is null' check
             if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
+
             {
                 return false;
             }
@@ -47,3 +49,4 @@ namespace RentACar.Core.Entities
         }
     }
 }
+#pragma warning restore IDE0041 // Use 'is null' check
