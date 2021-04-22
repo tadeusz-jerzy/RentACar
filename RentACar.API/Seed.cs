@@ -11,29 +11,51 @@ namespace RentACar.API
 
     public class Seed : ISeed
     {
-        private ICarService _carService;
-        private IBookingService _bookingService;
+        private readonly ICarService _carService;
+        private readonly IBookingService _bookingService;
+        private readonly ICarMakeService _carMakeService;
 
-        public Seed(ICarService carService, IBookingService bookingService)
+        public Seed(ICarService carService, 
+            IBookingService bookingService,
+            ICarMakeService carMakeService)
         {
             _carService = carService;
             _bookingService = bookingService;
+            _carMakeService = carMakeService;
         }
 
         public void Create()
         {
+            var makes = new List<CarMakeDTO>()
+            {
+                new CarMakeDTO() {Name = "POLSKI FIAT" },
+                new CarMakeDTO() {Name = "FSO" }
+            };
+
+            makes.ForEach(async m => await _carMakeService.CreateCarMakeFromDtoAsync(m));
+
+            var models = new List<CarModelDTO>()
+            {
+                new CarModelDTO() {Name = "126P", CarMakeId = 1 },
+                new CarModelDTO() {Name = "125P", CarMakeId = 1 },
+                new CarModelDTO() {Name = "POLONEZ", CarMakeId = 2 },
+                new CarModelDTO() {Name = "WARSZAWA", CarMakeId = 2 },
+            };
+
+            models.ForEach(async m => await _carMakeService.CreateCarModelFromDtoAsync(m));
+
             var cars = new List<CarCreateDTO>() {
             new CarCreateDTO(){
-                Make = "POLSKI FIAT", Model = "126P", DailyPricePLN = 50,
+                ModelId = 1, DailyPricePLN = 50,
                 RegistrationNumber = "00001", Vin="00000000000000001", AcrissCode = "ABCD" },
             new CarCreateDTO(){
-                Make = "POLSKI FIAT", Model = "125P", DailyPricePLN = 60,
+                ModelId = 2, DailyPricePLN = 60,
                 RegistrationNumber = "00002", Vin="00000000000000002", AcrissCode = "ABCD" },
             new CarCreateDTO(){
-                Make = "FSO", Model = "WARSZAWA", DailyPricePLN = 70,
+                ModelId = 3, DailyPricePLN = 70,
                 RegistrationNumber = "00003", Vin="00000000000000003", AcrissCode = "ABCD" },
             new CarCreateDTO(){
-                Make = "FSO", Model = "POLONEZ", DailyPricePLN = 100,
+                ModelId = 4, DailyPricePLN = 100,
                 RegistrationNumber = "00004", Vin="00000000000000004", AcrissCode = "ABCD" },
             };
 

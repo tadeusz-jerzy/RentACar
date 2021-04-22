@@ -17,16 +17,20 @@ namespace RentACar.Infrastructure
         public CarRepository(DbContext context) : base(context) { }
 
         public async Task<bool> CarWithVinExists(string vinCode)
-            => (null != await _entities
+            => (default(int) != await IncludingRelated
                 .Where(c => c.Vin.Code == vinCode)
-                .Include(c => c.Id)
+                .Select(c => c.Id)
                 .FirstOrDefaultAsync());
-        public async Task<bool> CarWithRegistrationExists(string reg)
-            => (null != await _entities
-                .Where(c => c.RegistrationNumber == reg)
-                .Include(c => c.Id)
+        public async Task<bool> CarWithRegistrationExists(string registration)
+            => (default(int) != await IncludingRelated
+                .Where(c => c.RegistrationNumber == registration)
+                .Select(c => c.Id)
                 .FirstOrDefaultAsync());
 
+        protected override IQueryable<Car> IncludingRelated => _entities
+            .Include(c => c.Specification)
+            .ThenInclude(s => s.Model)
+            .ThenInclude(m => m.CarMake);
 
 
     }

@@ -14,7 +14,7 @@ namespace RentACar.Core.Interfaces
 
         Task<CarForListingDTO> GetCarAsync(int id);
 
-        Task<CarForListingDTO> CreateCarFromDto(CarCreateDTO car);
+        Task<CarForListingDTO> CreateCarFromDto(CarCreateDTO dto);
 
         Task<bool> DeleteCarAsync(int id);
 

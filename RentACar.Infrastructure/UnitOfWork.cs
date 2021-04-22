@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RentACar.Core.Entities;
 using RentACar.Core.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace RentACar.Infrastructure
@@ -38,12 +39,18 @@ namespace RentACar.Infrastructure
             await _context.SaveChangesAsync();
         }
 
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
             if (_context != null)
             {
                 _context.Dispose();
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace RentACar.UnitTests
 
     public class CarsControllerTests
     {
-        private ITestOutputHelper _output;
+        private readonly ITestOutputHelper _output;
         public CarsControllerTests(ITestOutputHelper output)
         {
             _output = output;

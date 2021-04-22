@@ -21,6 +21,7 @@ namespace RentACar.Infrastructure
         {
             services.AddTransient<ICarService, CarService>();
             services.AddTransient<IBookingService, BookingService>();
+            services.AddTransient<ICarMakeService, CarMakeService>();
             services.AddScoped (typeof(IBaseRepository<>), typeof(BaseRepository<>));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();

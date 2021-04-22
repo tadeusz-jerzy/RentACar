@@ -47,24 +47,14 @@ namespace RentACar.Core.Services
 
             var vin = new Vin(dto.Vin);
 
-            return new Car()
-            {
-                Specification = spec,
-                Vin = vin,
-                DailyPricePLN = dto.DailyPricePLN,
-                Status = RentalCarStatus.Active
-            };
+            Car car = new Car(spec, vin, dto.RegistrationNumber, dto.DailyPricePLN);
             
-            
-            // internal validation within Car class
-            Car car = Car.FromDto(dto); // contains single entity-level validation
-
-
-
-            // now, adding the car will not cause invalid state of the system
             _db.Cars.Add(car);
             await _db.SaveChangesAsync();
-            return MyMapper.Map(car);
+            // reload with make, model
+            var withMakeModel = await _db.Cars.FindByIdAsync(car.Id);
+            CarForListingDTO forListing = MyMapper.Map(withMakeModel);
+            return forListing ;
         }
 
         public async Task<bool> DeleteCarAsync(int id)

@@ -40,7 +40,7 @@ namespace RentACar.Core.Services
             if (preExisting != null)
                 throw new ConflictingEntityException("Car make with the same name already exists");
 
-            var make = new CarMake { Name = createDto.Name } ;
+            var make = new CarMake { Name = createDto.Name.ToUpper() } ;
             _db.CarMakes.Add(make);
             await _db.SaveChangesAsync();
 
@@ -59,13 +59,13 @@ namespace RentACar.Core.Services
 
             CarModel entity = new CarModel
             {
-                Name = createDto.Name,
+                Name = createDto.Name.ToUpper(),
                 CarMake = make,
                 CarMakeId = createDto.CarMakeId
             };
 
             _db.CarModels.Add(entity);
-            _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
 
             return MyMapper.Map(entity);
         }

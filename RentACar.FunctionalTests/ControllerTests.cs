@@ -64,8 +64,7 @@ namespace RentACar.FunctionalTests
             // arrange
             var dto = new CarCreateDTO
             {
-                Make = "POLSKI FIAT",
-                Model = "126P",
+                ModelId = 1,
                 AcrissCode = "ABCD",
                 RegistrationNumber = "00000",
                 Vin = "00000000000000000",
@@ -95,8 +94,7 @@ namespace RentACar.FunctionalTests
             // arrange
             var dto = new CarCreateDTO
             {
-                Make = "HONDA", // DTO format OK
-                Model = "CIVIC", // DTO format OK
+                ModelId = 1, // DTO format OK
                 AcrissCode = "ABCDEFG", // too long
                 RegistrationNumber = "00", // too short
                 Vin = null, // missing, required

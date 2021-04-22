@@ -15,6 +15,7 @@ namespace RentACar.Infrastructure
     {
         protected readonly DbContext _context;
         protected readonly DbSet<T> _entities;
+        protected virtual IQueryable<T> IncludingRelated => _entities;
 
         public BaseRepository(DbContext context)
         {
@@ -24,7 +25,7 @@ namespace RentACar.Infrastructure
 
         public async Task<List<T>> GetAllAsync()
         {
-            return await _entities.ToListAsync();
+            return await IncludingRelated.ToListAsync();
         }
 
         private IQueryable<T> QueryForConditions(
@@ -32,8 +33,8 @@ namespace RentACar.Infrastructure
             bool tracking = true)
         {
             IQueryable<T> q = tracking 
-                ? _entities.AsQueryable()
-                : _entities.AsNoTracking().AsQueryable() ;
+                ? IncludingRelated.AsQueryable()
+                : IncludingRelated.AsNoTracking().AsQueryable() ;
 
             foreach (var cond in conditions)
                 q = q.Where(cond);
@@ -64,10 +65,10 @@ namespace RentACar.Infrastructure
 
         public async Task<T> FindByIdAsync(int id)
         {
-            return await _entities.FindAsync(id);
+            return await GetOneAsync(e => e.Id == id);
         }
 
-        public async void Add(T entity)
+        public void Add(T entity)
         {
             _entities.Add(entity);
         }

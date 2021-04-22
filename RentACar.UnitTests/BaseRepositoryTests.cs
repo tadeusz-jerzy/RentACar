@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Moq;
 using RentACar.Core.DTOs;
 using RentACar.Core.Entities;
+using RentACar.Core.Services;
 using RentACar.Infrastructure;
 using RentACar.IntegrationTests;
 using System;
@@ -33,18 +34,23 @@ namespace RentACar.UnitTests
         public BaseRepositoryTests(ITestOutputHelper output) : base(output)
         {
             UseFreshDb();
+           
+
         }
 
         private Car GetValidCar() =>
-            Car.FromDto(new CarCreateDTO
-            {
-                Make = "POLSKI FIAT",
-                Model = "126P",
-                AcrissCode = "ABCD",
-                RegistrationNumber = "00000",
-                Vin = "00000000000000000",
-                DailyPricePLN = 50
-            });
+            new Car(
+                specification: CarSpecification.FromModelAndAcriss(
+                    new CarModel()
+                    {
+                        Name = "126P",
+                        CarMake = new CarMake() { Name = "POLSKI FIAT" }
+                    },
+                    acrissCode: "ABCD"),
+                vin: new Vin("00000000000000001"),
+                registrationNumber: "00001",
+                dailyPricePLN: 50);
+            
 
         [Fact]
         public void Add_CarAddedToDbContext()

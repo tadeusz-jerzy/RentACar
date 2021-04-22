@@ -40,6 +40,7 @@ namespace RentACar.Core.Entities
         public CarMake Make => Model.CarMake;
 
         #region creation methods
+        private CarSpecification() { }
         private CarSpecification(CarModel model, string acrissCode)
         {
             Model = model;

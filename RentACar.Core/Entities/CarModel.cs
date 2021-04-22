@@ -8,7 +8,7 @@ namespace RentACar.Core.Entities
     public class CarModel : BaseEntity
     {
         public int CarMakeId { get; set; }
-        public CarMake CarMake;
+        public CarMake CarMake { get; set; }
 
         [MinLength(1)]
         [MaxLength(100)]

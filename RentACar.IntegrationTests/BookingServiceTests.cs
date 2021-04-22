@@ -18,10 +18,13 @@ namespace RentACar.IntegrationTests
         async Task CreateOneCarUsingCarservice()
         {
             var cs = new CarService(db);
+            var ms = new CarMakeService(db);
+
+            await ms.CreateCarMakeFromDtoAsync(new CarMakeDTO { Name = "POLSKI FIAT" });
+            await ms.CreateCarModelFromDtoAsync(new CarModelDTO { Name = "126P", CarMakeId = 1 });
             await cs.CreateCarFromDto(new CarCreateDTO
             {
-                Make = "POLSKI FIAT",
-                Model = "126P",
+                ModelId = 1,
                 AcrissCode = "ABCD",
                 RegistrationNumber = "00000",
                 Vin = "00000000000000000",
@@ -34,7 +37,7 @@ namespace RentACar.IntegrationTests
             bookingService = new BookingService(db, userService);
         }
 
-        private BookingService bookingService;
+        private readonly BookingService bookingService;
 
         private BookingDTO GetValidBookingDTO()
             => new BookingDTO

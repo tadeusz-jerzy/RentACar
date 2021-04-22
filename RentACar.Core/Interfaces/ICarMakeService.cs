@@ -14,8 +14,8 @@ namespace RentACar.Core.Interfaces
 
         Task<CarMakeDTO> GetMakeAsync(int id);
 
-        Task<CarMakeDTO> CreateCarMakeFromDtoAsync(CarMakeDTO dto);
-        Task<CarModelDTO> CreateCarModelFromDtoAsync(CarModelDTO dto);
+        Task<CarMakeDTO> CreateCarMakeFromDtoAsync(CarMakeDTO createDto);
+        Task<CarModelDTO> CreateCarModelFromDtoAsync(CarModelDTO createDto);
 
         Task<List<CarModelDTO>> GetCarModelsForMakeAsync(int id);
 

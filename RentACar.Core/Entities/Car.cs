@@ -13,11 +13,9 @@ namespace RentACar.Core.Entities
 
     public class Car : BaseEntity
     {
-        private Car() { }
-        
         [Required]
         public Vin Vin { get; set; }
-        
+
         // Registration Number could be a ValueObject with own validation too
         [Required]
         [MinLength(6)]
@@ -25,19 +23,38 @@ namespace RentACar.Core.Entities
         public string RegistrationNumber { get; set; }
 
         [Required]
-        public CarSpecification Specification { get ; set ; }
+        public CarSpecification Specification { get; set; }
 
         [DataType(DataType.Currency)]
-        [Range(9,5000, ErrorMessage = "Daily price {0} must be between {1} and {2}")]
-        public decimal DailyPricePLN { get; set; } 
+        [Range(9, 5000, ErrorMessage = "Daily price {0} must be between {1} and {2}")]
+        public decimal DailyPricePLN { get; set; }
 
         [Required]
-        public RentalCarStatus Status { get; set; } 
+        public RentalCarStatus Status { get; set; }
 
-        public List<Booking> Bookings { get; set; } 
+        public List<Booking> Bookings { get; set; }
+
         
+        private Car () {}
+
+        public Car (
+            CarSpecification specification, 
+            Vin vin, 
+            string registrationNumber, 
+            decimal dailyPricePLN)
+        {
+            Specification = specification;
+            Vin = vin;
+            RegistrationNumber = registrationNumber;
+            DailyPricePLN = dailyPricePLN;
+            Status = RentalCarStatus.Active;
+        }
+    
+
         
         public bool IsActive => (RentalCarStatus.Active == Status);
+
+
 
     }
 }
