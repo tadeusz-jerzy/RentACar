@@ -47,7 +47,60 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"RegistrationNumber\" : \"abc123\",\r\n    \"VIN\" : \"12345678901234567\",\r\n    \"Make\" : \"polski fiat\",\r\n    \"Model\": \"125p\",\r\n    \"DailyPricePLN\" : 15,\r\n    \"AcrissCode\" : \"ABCD\"\r\n}",
+					"raw": "{\r\n    \"RegistrationNumber\" : \"abc125\",\r\n    \"VIN\" : \"12345678901234565\",\r\n    \"ModelId\": 1,\r\n    \"DailyPricePLN\" : 15,\r\n    \"AcrissCode\" : \"ABCD\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/cars",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "repeated add car",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Failed second POST request with 400\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response should include ConflictingEntity error\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var c = jsonData[\"errors\"];\r",
+							"    pm.expect(c.hasOwnProperty(\"ConflictingEntityException\")).to.eql(true);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"RegistrationNumber\" : \"abc125\",\r\n    \"VIN\" : \"12345678901234565\",\r\n    \"ModelId\": 1,\r\n    \"DailyPricePLN\" : 15,\r\n    \"AcrissCode\" : \"ABCD\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -85,11 +138,12 @@
 							"});\r",
 							"\r",
 							"\r",
-							"pm.test(\"Response should include errors element\", function () {\r",
+							"pm.test(\"Response should include validation errors\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    var c = jsonData[\"errors\"];\r",
-							"    console.log(c);\r",
-							"    pm.expect(c.to.eql(true));\r",
+							"    pm.expect(c.hasOwnProperty(\"Vin\")).to.eql(true);\r",
+							"    pm.expect(c.hasOwnProperty(\"AcrissCode\")).to.eql(true);\r",
+							"    pm.expect(c.hasOwnProperty(\"RegistrationNumber\")).to.eql(true);\r",
 							"});\r",
 							""
 						],
@@ -152,6 +206,52 @@
 							"    \r",
 							"});\r",
 							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:5001/api/cars/2",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"cars",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "repeated delete car 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Failed second DELETE request with 404\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([404]);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response should include EntityNotFound error\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var c = jsonData[\"errors\"];\r",
+							"    pm.expect(c.hasOwnProperty(\"EntityNotFoundException\")).to.eql(true);\r",
+							"});"
 						],
 						"type": "text/javascript"
 					}
