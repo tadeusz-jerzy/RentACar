@@ -17,5 +17,3 @@ Highlights:
 + Example integration tests 
 + Example functional tests using WebApplicationFactory + highlighting limitation of these for checking i.e. cache header settings
 + Example functional tests using Postman/Newman CLI (including better visibility of the final setting of cache headers from WebAPI)
-
-Another repo will contain another take on the same subject , using Vertical Slices Architecture, CQRS, Event Sourcing
